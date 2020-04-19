@@ -37,6 +37,18 @@
             #map{
                 text-align:center;
             }
+            .logo{
+                width:70px;
+                height:60px;
+            }
+            footer{
+                text-align:center;
+                align-items: center;
+                justify-content: center;
+                border-top:1px solid white;
+                background-color:rgb(43,43,43);
+                color:white;
+            }
         </style>
 
         <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -123,60 +135,66 @@
         <!-- END LEGENDS:CONTROLS -->    
 
         <!-- SOURCES -->
-        <section id="sources" >
-            <a id="sources"><h4>Sources</h4>
-                <p class="lead">
-                    Ressources used :
-                </p>
-                <ul>
-                    <li class="text-white">
-                        <b>DESIGN</b> : Bootstrap 4.0 <a  href="https://getbootstrap.com/"><kbd>bootstrap</kbd></a>
-                    </li>
-                    <li class="text-white">
-                        <b>RegEx</b> : Data parser <a  href="https://regex101.com/"><kbd>regex101</kbd></a>
-                    </li>       
-                    <li class="text-white">
-                        <b>WORLDMAP</b> : D3.js <a  href="https://d3js.org/"><kbd>d3.js</kbd></a>
-                        <ul>
-                            <li class="text-white">
-                                interactivity zoom <a  href="https://www.d3-graph-gallery.com/graph/interactivity_zoom.html"><kbd>d3 graph gallery</kbd></a>
-                            </li> 
-                            <li class="text-white">
-                                understanding zoom behavior bindings <a  href="http://bl.ocks.org/cpdean/7a71e687dd5a80f6fd57"><kbd>bl.ocks.org</kbd></a>
-                            </li> 
-                            <li class="text-white">
-                                topojson map <a  href="https://github.com/topojson/world-atlas"><kbd>world-atlas</kbd></a>
-                            </li> 
-                            <li class="text-white">
-                                data binding (markers) <a  href="https://www.d3-graph-gallery.com/graph/bubblemap_basic.html"><kbd>d3-graph-gallery</kbd></a>
-                            </li> 
-                            <li class="text-white">
-                                create circles from array <a  href="https://bost.ocks.org/mike/circles/"><kbd>Three Little Circles</kbd></a>
-                            </li> 
-                        </ul>
-                    </li>  
-                     
-                    <li class="text-white">
-                        <b>IP LOOKUP | IP LOCATION : </b> 
-                        <ul>
-                            <i>(ipgeolocation was chosen since it had a 1k request/per day for registered users)</i>
-                            <li class="text-white"> 
-                                ipapi.co <a  href="https://ipapi.co/"><kbd>ipAPI</kbd></a>                    
-                            </li>
-                            <li class="text-white">                    
-                                ipdata.co <a  href="https://ipdata.co/"><kbd>ipData</kbd></a>
-                            </li>
-                            <li class="text-white">
-                                ipgeolocation.io <a href="https://ipgeolocation.io/"><kbd>ipGeoLocation</kbd></a>
-                            </li>
-                        </ul>  
-                    </li>     
-                </ul>
+        <section id="sources" class="pt-4 my-md-5 pt-md-5 border-top">
+        
+
+        <div class="row justify-content-center" id="sources">
+            <div class="col-md-3">
+              <h5 class="text-white">Design</h5>
+              <ul class="list-unstyled text-small">
+                <li>Bootstrap 4.0 <a  href="https://getbootstrap.com/"><kbd>bootstrap</kbd></a>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <h5 class="text-white">Data processing & Mapping</h5>
+              <ul class="list-unstyled text-small">
+                <li>
+                    RegEx : Data parser <a  href="https://regex101.com/"><kbd>regex101</kbd></a>
+                </li>  
+                <li>
+                    Map generation : D3.js <a  href="https://d3js.org/"><kbd>d3.js</kbd></a>
+                </li>
+                <li>
+                    Map interactivity : Zoom <a  href="https://www.d3-graph-gallery.com/graph/interactivity_zoom.html"><kbd>d3 graph gallery</kbd></a>
+                </li> 
+                <li >
+                    Map interactivity : Zoom <a  href="http://bl.ocks.org/cpdean/7a71e687dd5a80f6fd57"><kbd>bl.ocks.org</kbd></a>
+                </li> 
+                <li>
+                    Data binding to map <a  href="https://github.com/topojson/world-atlas"><kbd>world-atlas</kbd></a>
+                </li> 
+                <li>
+                    Data binding displayed (markers) <a  href="https://www.d3-graph-gallery.com/graph/bubblemap_basic.html"><kbd>d3-graph-gallery</kbd></a>
+                </li> 
+                <li>
+                    Ways of displaying data <a  href="https://bost.ocks.org/mike/circles/"><kbd>Three Little Circles</kbd></a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-3">                
+                <h5 class="text-white">IP lookup / IP location : </h5> 
+                <ul class="list-unstyled text-small">
+                        <i>(ipgeolocation.io was chosen since it had a 1k request/per day for registered users)</i>
+                        <li> 
+                            ipapi.co <a  href="https://ipapi.co/"><kbd>ipAPI</kbd></a>                    
+                        </li>
+                        <li>                    
+                            ipdata.co <a  href="https://ipdata.co/"><kbd>ipData</kbd></a>
+                        </li>
+                        <li>
+                            ipgeolocation.io <a href="https://ipgeolocation.io/"><kbd>ipGeoLocation</kbd></a>
+                        </li>
+                    </ul>  
+                </li> 
+            </div>
+            </div>
         </section>
         <!-- END SOURCES -->
         <!-- FOOTER -->
-        <footer>
-
+        <footer class="row">
+            This is a 
+            <img src="img/sip.png" class="logo"/>
+            product
         </footer>
         <!-- END FOOTER -->
     </body>
