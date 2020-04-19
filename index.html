@@ -1,0 +1,265 @@
+<!--
+    D.RS | 19.04.2020 | index.html - view | Atelier Sécurité | GitHub : SoftIcePink
+    Note : If no locations are show or you're too lazy to get an api key, 
+    use the array test (from test.js) instead of logData at line 800 .data(logData) -> .data(test)
+-->
+<html>
+    <head>
+        <!-- HTML basics elements -->
+        <title>GEOLOCATION OF ACCESS</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="img/favicon.png">
+        <!-- Bootstrap (css, js), AJAX, jQuery-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">        
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>        
+        <!-- Data -->
+        <script type="text/javascript" src="data/ip_occurences.js"></script>
+        <script type="text/javascript" src="data/test.js"></script>
+        <style>
+            path {
+              stroke: white;
+              stroke-width: 0.2px;
+              fill: black;
+            }
+            svg{
+                border: 1px solid white;
+            }
+            #data table, th, td{
+                border:1px solid white;
+                border-spacing: 0px;
+                text-align:center;
+                padding: 3px;
+            }
+            #map{
+                text-align:center;
+            }
+        </style>
+
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v0.min.js"></script>
+        
+    </head>
+    <body class="bg-secondary">
+        
+        <!-- NAV BAR -->
+            <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+                <a class="navbar-brand" href="#">
+                    <img src="img/logo-light.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                    GEOLOCATION OF ACCESS
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navCollapse" aria-controls="navCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navCollapse">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sources">Sources</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://github.com/SoftIcePink/log-worldmap/">GitHub</a>                            
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        <!-- END NAV BAR -->
+        <!-- ALERT -->
+        <div class="alert alert-light" role="alert">
+            This web application was created by D.RS as part of the "Atelier de Sécurité".
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-danger" role="alert">
+            The locations may not show up because this application uses free APIs (see <a href="#sources">IP LOOKUP</a>) which have a limited number of requests per connections.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- END ALERT -->
+        <!-- INTRO P -->
+        <section id="information">
+            <p class="lead text-white">
+                The goal of this app is to display the corresponding location of all the ip address logged in the nginx log file (found <a href="data/access.log" class="text-info">here</a>).
+            </p>
+            <p>The first step was to parse the log data into a file containing only the ip address (cf. <a href="#sources" class=text><kbd>RegEx</kbd></a>).
+            Once that was done, I used an API to get all the locations for each ip (see <a href="#sources"><kbd>ipGeo</kbd></a>). The final step consisted in using d3.js to visualize all the data in the form of a world map.(cf. <a href="#sources" class=text><kbd>d3.js</kbd></a>).
+            Disclaimer : I am not familiar with neither ipapi nor d3.js.</p>
+        </section>
+        <!-- END INTRO P -->
+
+        <!-- MAP -->
+        <section id="map">
+            <h1>All connections throughout the world</h1>
+        </section>
+        <!-- END MAP -->     
+        <!-- LEGENDS:CONTROLS-->
+        <table id="controls">
+            <thead>
+                <th colspan="2">Controls</th>
+                <th colspan="2">Legend</th>                
+            </thead>
+            <tr>
+                <td>Zoom</td>
+                <td>Mouse wheel</td> 
+                <td>Land</td>               
+                <td><svg width="10" height="10" style="background-color:black;"></svg></td>
+            </tr>
+            <tr>
+                <td>Move</td>
+                <td>Click + Drag</td>
+                <td>Borders (countries)</td>               
+                <td><svg width="10" height="0.2" style="background-color:transparent;"></svg></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border : 0px"></td>
+                <td>Sea</td>
+                <td><svg width="10" height="10" style="background-color:transparent;"></svg></td>
+            </tr>
+        </table>
+        <!-- END LEGENDS:CONTROLS -->    
+
+        <!-- SOURCES -->
+        <section id="sources" >
+            <a id="sources"><h4>Sources</h4>
+                <p class="lead">
+                    Ressources used :
+                </p>
+                <ul>
+                    <li class="text-white">
+                        <b>DESIGN</b> : Bootstrap 4.0 <a  href="https://getbootstrap.com/"><kbd>bootstrap</kbd></a>
+                    </li>
+                    <li class="text-white">
+                        <b>RegEx</b> : Data parser <a  href="https://regex101.com/"><kbd>regex101</kbd></a>
+                    </li>       
+                    <li class="text-white">
+                        <b>WORLDMAP</b> : D3.js <a  href="https://d3js.org/"><kbd>d3.js</kbd></a>
+                        <ul>
+                            <li class="text-white">
+                                interactivity zoom <a  href="https://www.d3-graph-gallery.com/graph/interactivity_zoom.html"><kbd>d3 graph gallery</kbd></a>
+                            </li> 
+                            <li class="text-white">
+                                understanding zoom behavior bindings <a  href="http://bl.ocks.org/cpdean/7a71e687dd5a80f6fd57"><kbd>bl.ocks.org</kbd></a>
+                            </li> 
+                            <li class="text-white">
+                                topojson map <a  href="https://github.com/topojson/world-atlas"><kbd>world-atlas</kbd></a>
+                            </li> 
+                            <li class="text-white">
+                                data binding (markers) <a  href="https://www.d3-graph-gallery.com/graph/bubblemap_basic.html"><kbd>d3-graph-gallery</kbd></a>
+                            </li> 
+                            <li class="text-white">
+                                create circles from array <a  href="https://bost.ocks.org/mike/circles/"><kbd>Three Little Circles</kbd></a>
+                            </li> 
+                        </ul>
+                    </li>  
+                     
+                    <li class="text-white">
+                        <b>IP LOOKUP | IP LOCATION : </b> 
+                        <ul>
+                            <i>(ipgeolocation was chosen since it had a 1k request/per day for registered users)</i>
+                            <li class="text-white"> 
+                                ipapi.co <a  href="https://ipapi.co/"><kbd>ipAPI</kbd></a>                    
+                            </li>
+                            <li class="text-white">                    
+                                ipdata.co <a  href="https://ipdata.co/"><kbd>ipData</kbd></a>
+                            </li>
+                            <li class="text-white">
+                                ipgeolocation.io <a href="https://ipgeolocation.io/"><kbd>ipGeoLocation</kbd></a>
+                            </li>
+                        </ul>  
+                    </li>     
+                </ul>
+        </section>
+        <!-- END SOURCES -->
+        <!-- FOOTER -->
+        <footer>
+
+        </footer>
+        <!-- END FOOTER -->
+    </body>
+    <script type="text/javascript">
+    // D3.js + Data process
+
+        // ADD YOUR OWN API KEY 
+        const API_KEY = ""
+
+        // Import data (logData is a variable from ip_occurences)       
+        logData.forEach(getLocation); 
+
+        // Standalone function just in case
+        function getLocation(item) {     
+            // You'll need to add your API key to use this
+            $.getJSON("https://api.ipgeolocation.io/ipgeo?apiKey=" + API_KEY + "&ip=" + item.IP, function(data){
+
+                    // Push data into the array
+                    item.Location = data.city;
+                    item.Longitude = parseInt(data.longitude);
+                    item.Latitude = parseInt(data.latitude);     
+                    item.Identity = data.organization;                    
+            })                           
+        }
+
+
+      
+        // Drawing section        
+        // D3.json will use the json given and generate the countries in this application
+        var width = 900;
+        var height = 600;
+
+        // Gives Zoom as a behaviour to the svg
+        var zoom = d3.behavior.zoom()
+            .translate([0,0])
+            .scale(1)   
+            .scaleExtent([0.2,5]) 
+            .on("zoom", zoomed);
+
+        // Projection type
+        var projection = d3.geo.mercator()
+            .translate([width, height])
+            .scale(500); 
+
+        // SVG append
+        var svg = d3.select("#map")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "50%")    
+            .call(zoom);
+        
+        // Add the countries, etc.
+        var map = svg.append("g");
+
+        var path = d3.geo.path()
+           .projection(projection);
+
+
+        // Zoom function that was added to the svg
+        function zoomed(){
+            map.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        }     
+        d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json", function(error, topology) {
+            // Draws the path (= coutries' borders)
+            map.selectAll("path")
+                .data(topojson.object(topology, topology.objects.countries)
+                    .geometries) // we use specifically only the countries objects contained in the json        
+                .enter()
+                    .append("path") // svg dom element
+                    .attr("d", path) // the path becomes a new element part of the map element
+
+            // Draws the circles on the map 
+            map.selectAll("myCircles")
+                .data(logData) // binding the data source this app uses.
+                .enter()                           
+                    .append("circle") // svg DOM element                    
+                        .attr("cx", function(d){ return projection([d.Longitude, d.Latitude])[0]}) // attribute of html svg circle element
+                        .attr("cy", function(d){ return projection([d.Longitude, d.Latitude])[1]}) // same as the precedent line                                     
+                        .attr("r", 5) // radius of the circle
+                        .style("fill", "red") // style
+                        .attr("stroke", "#69b3a2") // style
+                        .attr("stroke-width", 1) // style    
+                
+        });
+    </script>
+</html>
